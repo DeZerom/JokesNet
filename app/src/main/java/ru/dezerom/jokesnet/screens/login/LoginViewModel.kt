@@ -3,9 +3,14 @@ package ru.dezerom.jokesnet.screens.login
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import ru.dezerom.jokesnet.repositories.AuthenticationRepository
 
 class LoginViewModel: ViewModel() {
 
+    private val authRepo = AuthenticationRepository()
     private val _uiState = MutableLiveData<LoginState>(LoginState.WaitingCredentials("", ""))
 
     /**
@@ -29,6 +34,23 @@ class LoginViewModel: ViewModel() {
         if (state.pass != new) _uiState.value = state.copy(pass = new)
     }
 
+    /**
+     * Log in btn listener
+     */
+    val loginBtnClicked = {
+        val state = getWaitingForCredentialsState()
+        _uiState.value = LoginState.CheckingCredentials
+
+        checkCredentials(state)
+    }
+
+    /**
+     * Try again btn listener
+     */
+    val tryAgainBtnClicked = {
+        _uiState.value = LoginState.WaitingCredentials("", "")
+    }
+
     private fun getWaitingForCredentialsState(): LoginState.WaitingCredentials {
         val state = uiState.value ?:
             throw IllegalStateException("Impossible exception thrown. Null uiState")
@@ -36,6 +58,15 @@ class LoginViewModel: ViewModel() {
             throw IllegalStateException("Got $state but expected instance of WaitingCredentials")
 
         return state
+    }
+
+    private fun checkCredentials(state: LoginState.WaitingCredentials) {
+        viewModelScope.launch {
+            val isSuccess = authRepo.checkCredentials(state.login, state.pass)
+
+            if (isSuccess) _uiState.postValue(LoginState.WaitingCredentials("good", "boy"))
+            else _uiState.postValue(LoginState.WrongCredentials)
+        }
     }
 
 }

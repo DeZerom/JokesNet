@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">JokesNet</string>
+    <string name="login_string">Login</string>
+    <string name="password_string">Password</string>
+    <string name="wrong_creds_joke">I forbid you to have fun</string>
+    <string name="log_in_string">Log in</string>
+    <string name="try_again_string">Try again</string>
+    <string name="loading_joke">Everything that you want is \'hi-hi\' or \'ha-ha\', but I must go to the database and get back</string>
+    <string name="wrong_credentials_string">Wrong login or password, dude</string>
 </resources>
