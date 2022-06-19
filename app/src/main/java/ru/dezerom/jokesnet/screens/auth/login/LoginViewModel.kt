@@ -1,10 +1,9 @@
-package ru.dezerom.jokesnet.screens.login
+package ru.dezerom.jokesnet.screens.auth.login
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import ru.dezerom.jokesnet.repositories.AuthenticationRepository
 

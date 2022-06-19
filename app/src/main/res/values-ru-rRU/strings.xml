@@ -6,6 +6,12 @@
     <string name="wrong_creds_joke">Я вам запрещаю смеяться</string>
     <string name="log_in_string">Войти</string>
     <string name="try_again_string">Попробовать снова</string>
-    <string name="loading_joke">Вам бы все хиханьки да хахньки, а мне до базы данных и обратно сходить надо</string>
+    <string name="loading_joke">Вам бы все хиханьки да хахньки, а мне до базы данных и обратно сходить надо и принести твои шуточки</string>
     <string name="wrong_credentials_string">Неверный логин или пароль, дружок</string>
+    <string name="sign_in_string">Зарегистрироваться</string>
+    <string name="cancel_string">Отмена</string>
+    <string name="successfull_signingIn_string">Nice! Теперь ты смешарик</string>
+    <string name="account_exists_string">Ты уже смешарик, чел</string>
+    <string name="have_to_login">Просто залогинся, чел</string>
+    <string name="dude_string">Чел...</string>
 </resources>

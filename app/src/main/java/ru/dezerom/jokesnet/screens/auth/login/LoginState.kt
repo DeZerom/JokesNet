@@ -1,4 +1,4 @@
-package ru.dezerom.jokesnet.screens.login
+package ru.dezerom.jokesnet.screens.auth.login
 
 sealed class LoginState {
     data class WaitingCredentials(val login: String, val pass: String) : LoginState()

@@ -5,6 +5,12 @@
     <string name="wrong_creds_joke">I forbid you to have fun</string>
     <string name="log_in_string">Log in</string>
     <string name="try_again_string">Try again</string>
-    <string name="loading_joke">Everything that you want is \'hi-hi\' or \'ha-ha\', but I must go to the database and get back</string>
+    <string name="loading_joke">Everything that you want is \'hi-hi\' or \'ha-ha\', but I must go to the database and get back with your jokes</string>
     <string name="wrong_credentials_string">Wrong login or password, dude</string>
+    <string name="sign_in_string">Sign in</string>
+    <string name="cancel_string">Cancel</string>
+    <string name="successfull_signingIn_string">Nice! You are allowed to have a fun now</string>
+    <string name="account_exists_string">You are already have an account, dude</string>
+    <string name="have_to_login">Just log in, dude</string>
+    <string name="dude_string">Dude...</string>
 </resources>
