@@ -65,9 +65,9 @@ class LoginViewModel @Inject constructor(
 
     private fun checkCredentials(state: LoginState.WaitingCredentials) {
         viewModelScope.launch {
-            val isSuccess = authRepo.checkCredentials(state.login, state.pass)
+            val isSuccess = authRepo.performLogin(state.login, state.pass)
 
-            if (isSuccess) _uiState.postValue(LoginState.WaitingCredentials("good", "boy"))
+            if (isSuccess) _uiState.postValue(LoginState.Success)
             else _uiState.postValue(LoginState.WrongCredentials)
         }
     }

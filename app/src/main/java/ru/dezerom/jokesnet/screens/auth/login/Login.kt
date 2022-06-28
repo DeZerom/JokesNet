@@ -28,7 +28,7 @@ import ru.dezerom.jokesnet.screens.widgets.FullWidthTextField
 @Composable
 fun Login(
     navController: NavController,
-    viewModel: LoginViewModel = viewModel()
+    viewModel: LoginViewModel
 ) {
     val state by viewModel.uiState.observeAsState()
 
@@ -44,6 +44,7 @@ fun Login(
                 state as LoginState.WaitingCredentials,
                 navController
             )
+            LoginState.Success -> navController.navigate(Screens.PROFILE.route())
             LoginState.WrongCredentials, null -> Error(viewModel)
         }
     }
@@ -98,5 +99,5 @@ fun Error(viewModel: LoginViewModel) {
 @Preview
 @Composable
 fun LoginPreview() {
-    Login(navController = rememberNavController())
+    Login(navController = rememberNavController(), viewModel())
 }
