@@ -1,10 +1,12 @@
 package ru.dezerom.jokesnet.repositories
 
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class AuthenticationRepository {
+class AuthenticationRepository @Inject constructor() {
 
     /**
      * !!MOCK!!

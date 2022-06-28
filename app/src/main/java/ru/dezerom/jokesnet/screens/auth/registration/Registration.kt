@@ -19,6 +19,8 @@ import androidx.navigation.compose.rememberNavController
 import ru.dezerom.jokesnet.R
 import ru.dezerom.jokesnet.screens.Screens
 import ru.dezerom.jokesnet.screens.auth.Loading
+import ru.dezerom.jokesnet.screens.widgets.FullWidthButton
+import ru.dezerom.jokesnet.screens.widgets.FullWidthTextField
 
 @Composable
 fun Registration(
@@ -52,41 +54,22 @@ fun CreatingCredentials(
     state: RegistrationState.CreatingCredentials,
     navController: NavController
 ) {
-    TextField(
+    //login text field
+    FullWidthTextField(
         value = state.login,
         onValueChange = viewModel.loginChanged,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        label = { Text(text = stringResource(R.string.login_string)) }
-    )
-    Spacer(modifier = Modifier.height(16.dp))
-    TextField(
+        labelText = stringResource(R.string.login_string))
+    //password text field
+    FullWidthTextField(
         value = state.pass,
         onValueChange = viewModel.passChanged,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        label = { Text(text = stringResource(R.string.password_string))}
+        labelText = stringResource(R.string.password_string)
     )
-    Spacer(modifier = Modifier.height(16.dp))
-    Button(
-        onClick = viewModel.signIn,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-    ) {
-        Text(text = stringResource(R.string.sign_in_string))
-    }
-    Spacer(modifier = Modifier.height(16.dp))
-    Button(
+    FullWidthButton(onClick = viewModel.signIn, text = stringResource(R.string.sign_in_string))
+    FullWidthButton(
         onClick = { navController.navigate(Screens.LOGIN.route()) },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-    ) {
-        Text(text = stringResource(R.string.cancel_string))
-    }
+        text = stringResource(R.string.cancel_string)
+    )
 }
 
 @Composable
@@ -96,12 +79,12 @@ fun Success(navController: NavController) {
         contentDescription = "Check",
         modifier = Modifier.fillMaxSize(0.5F)
     )
-    Spacer(modifier = Modifier.height(16.dp))
     Text(text = stringResource(R.string.successfull_signingIn_string))
     Spacer(modifier = Modifier.height(16.dp))
-    Button(onClick = { navController.navigate(Screens.LOGIN.route()) }) {
-        Text(text = stringResource(R.string.log_in_string))
-    }
+    FullWidthButton(
+        onClick = { navController.navigate(Screens.LOGIN.route()) },
+        text = stringResource(R.string.log_in_string)
+    )
 }
 
 @Composable

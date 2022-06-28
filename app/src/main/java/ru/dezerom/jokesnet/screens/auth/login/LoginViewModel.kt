@@ -4,12 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.dezerom.jokesnet.repositories.AuthenticationRepository
+import javax.inject.Inject
 
-class LoginViewModel: ViewModel() {
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    private val authRepo: AuthenticationRepository
+): ViewModel() {
 
-    private val authRepo = AuthenticationRepository()
     private val _uiState = MutableLiveData<LoginState>(LoginState.WaitingCredentials("", ""))
 
     /**

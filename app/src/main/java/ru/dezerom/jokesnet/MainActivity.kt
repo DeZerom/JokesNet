@@ -7,14 +7,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.AndroidEntryPoint
 import ru.dezerom.jokesnet.screens.Screens
 import ru.dezerom.jokesnet.screens.auth.login.Login
+import ru.dezerom.jokesnet.screens.auth.login.LoginViewModel
 import ru.dezerom.jokesnet.screens.auth.registration.Registration
+import ru.dezerom.jokesnet.screens.profile.ProfileScreen
 import ru.dezerom.jokesnet.ui.theme.JokesNetTheme
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,8 +35,9 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         startDestination = Screens.LOGIN.route(),
                     ) {
-                        composable(Screens.LOGIN.route()) { Login(navController) }
-                        composable(Screens.REGISTRATION.route()) { Registration(navController) }
+                        composable(Screens.LOGIN.route()) { Login(navController, hiltViewModel()) }
+                        composable(Screens.REGISTRATION.route()) { Registration(navController, hiltViewModel()) }
+                        composable(Screens.PROFILE.route()) {ProfileScreen()}
                     }
                 }
             }

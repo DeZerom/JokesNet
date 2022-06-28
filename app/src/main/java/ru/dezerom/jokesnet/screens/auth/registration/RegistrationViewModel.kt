@@ -4,12 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.dezerom.jokesnet.repositories.AuthenticationRepository
+import javax.inject.Inject
 
-class RegistrationViewModel: ViewModel() {
-
-    val authRepo = AuthenticationRepository()
+@HiltViewModel
+class RegistrationViewModel @Inject constructor(
+    private val authRepo: AuthenticationRepository
+): ViewModel() {
 
     private val _uiState =
         MutableLiveData<RegistrationState>(RegistrationState.CreatingCredentials("", ""))
