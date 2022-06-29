@@ -1,13 +1,13 @@
 package ru.dezerom.jokesnet.screens
 
-enum class Screens {
-    LOGIN, REGISTRATION, PROFILE;
+enum class FirstLevelDestinations {
+    LOGIN, REGISTRATION, NESTED_SCREENS;
 
     fun route(): String {
         return when (this) {
             LOGIN -> "login"
             REGISTRATION -> "registration"
-            PROFILE -> "profile"
+            NESTED_SCREENS -> "nested_screens"
         }
     }
 }

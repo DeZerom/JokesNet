@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -16,9 +15,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import ru.dezerom.jokesnet.R
-import ru.dezerom.jokesnet.screens.Screens
+import ru.dezerom.jokesnet.screens.FirstLevelDestinations
 import ru.dezerom.jokesnet.screens.auth.Loading
 import ru.dezerom.jokesnet.screens.widgets.FullWidthButton
 import ru.dezerom.jokesnet.screens.widgets.FullWidthTextField
@@ -69,7 +67,7 @@ fun CreatingCredentials(
     )
     FullWidthButton(onClick = viewModel.signIn, text = stringResource(R.string.sign_in_string))
     FullWidthButton(
-        onClick = { navController.navigate(Screens.LOGIN.route()) },
+        onClick = { navController.navigate(FirstLevelDestinations.LOGIN.route()) },
         text = stringResource(R.string.cancel_string)
     )
 }
@@ -84,7 +82,7 @@ fun Success(navController: NavController) {
     Text(text = stringResource(R.string.successfull_signingIn_string))
     Spacer(modifier = Modifier.height(16.dp))
     FullWidthButton(
-        onClick = { navController.navigate(Screens.LOGIN.route()) },
+        onClick = { navController.navigate(FirstLevelDestinations.LOGIN.route()) },
         text = stringResource(R.string.log_in_string)
     )
 }
@@ -103,7 +101,7 @@ fun AccountExists(navController: NavController) {
     Spacer(modifier = Modifier.height(16.dp))
     Text(text = stringResource(R.string.dude_string))
     Spacer(modifier = Modifier.height(16.dp))
-    Button(onClick = { navController.navigate(Screens.LOGIN.route()) }) {
+    Button(onClick = { navController.navigate(FirstLevelDestinations.LOGIN.route()) }) {
         Text(text = stringResource(R.string.log_in_string))
     }
 }

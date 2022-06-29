@@ -1,5 +1,6 @@
 package ru.dezerom.jokesnet.screens.auth.login
 
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.dezerom.jokesnet.repositories.AuthenticationRepository
+import ru.dezerom.jokesnet.screens.Event
 import javax.inject.Inject
 
 @HiltViewModel
@@ -60,6 +62,14 @@ class LoginViewModel @Inject constructor(
             if (token != null) _uiState.postValue(LoginState.Success)
             else _uiState.postValue(LoginState.WaitingCredentials("", ""))
         }
+    }
+
+    /**
+     * Navigates to the nested graph and changes the [uiState] to [CheckingToken]
+     */
+    fun navigateToNestedScreens(event: Event) {
+        event.obtainEvent()
+        _uiState.value = LoginState.WaitingCredentials("", "'")
     }
 
     private fun getWaitingForCredentialsState(): LoginState.WaitingCredentials {

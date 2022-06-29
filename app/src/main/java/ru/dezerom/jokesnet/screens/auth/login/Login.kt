@@ -1,12 +1,9 @@
 package ru.dezerom.jokesnet.screens.auth.login
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -15,14 +12,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import ru.dezerom.jokesnet.R
-import ru.dezerom.jokesnet.screens.Screens
+import ru.dezerom.jokesnet.screens.Event
+import ru.dezerom.jokesnet.screens.FirstLevelDestinations
+import ru.dezerom.jokesnet.screens.NestedDestinations
 import ru.dezerom.jokesnet.screens.auth.Loading
 import ru.dezerom.jokesnet.screens.widgets.FullWidthButton
 import ru.dezerom.jokesnet.screens.widgets.FullWidthTextField
@@ -46,7 +44,14 @@ fun Login(
                 state as LoginState.WaitingCredentials,
                 navController
             )
-            LoginState.Success -> navController.navigate(Screens.PROFILE.route())
+            LoginState.Success -> {
+                val event = object : Event {
+                    override fun obtainEvent() {
+                        navController.navigate(FirstLevelDestinations.NESTED_SCREENS.route())
+                    }
+                }
+                viewModel.navigateToNestedScreens(event)
+            }
             LoginState.CheckingToken -> CheckingToken()
             LoginState.WrongCredentials, null -> Error(viewModel)
         }
@@ -77,7 +82,7 @@ fun CredentialInput(
         text = stringResource(id = R.string.log_in_string)
     )
     FullWidthButton(
-        onClick = { navController.navigate(Screens.REGISTRATION.route()) },
+        onClick = { navController.navigate(FirstLevelDestinations.REGISTRATION.route()) },
         text = stringResource(R.string.sign_in_string))
 }
 
