@@ -11,4 +11,7 @@ interface JokesNetServerApi {
     @POST("login")
     fun login(@Body credentials: Credentials): Call<LoginResponse>
 
+    @POST("/registration")
+    fun signIn(@Body credentials: Credentials): Call<Unit>
+
 }

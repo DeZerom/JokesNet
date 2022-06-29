@@ -51,8 +51,10 @@ class AuthenticationRepository @Inject constructor(
      */
     suspend fun signInNewUser(login: String, password: String): Boolean {
         return withContext(Dispatchers.IO) {
-            delay(1500)
-            login == "admin" && password == "admin"
+            val call = apiService.signIn(Credentials(login, password.sha256()))
+            val response = call.awaitResponse()
+
+            response.isSuccessful
         }
     }
 

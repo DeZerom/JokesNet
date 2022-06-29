@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -63,7 +64,8 @@ fun CreatingCredentials(
     FullWidthTextField(
         value = state.pass,
         onValueChange = viewModel.passChanged,
-        labelText = stringResource(R.string.password_string)
+        labelText = stringResource(R.string.password_string),
+        visualTransformation = PasswordVisualTransformation()
     )
     FullWidthButton(onClick = viewModel.signIn, text = stringResource(R.string.sign_in_string))
     FullWidthButton(
