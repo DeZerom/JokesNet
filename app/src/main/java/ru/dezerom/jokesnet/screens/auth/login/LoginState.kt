@@ -5,4 +5,5 @@ sealed class LoginState {
     object WrongCredentials : LoginState()
     object CheckingCredentials : LoginState()
     object Success: LoginState()
+    object CheckingToken : LoginState()
 }

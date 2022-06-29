@@ -38,6 +38,12 @@ class AuthenticationRepository @Inject constructor(
         }
     }
 
+    suspend fun getToken(): Token? {
+        return withContext(Dispatchers.IO) {
+            tokenDao.selectToken()
+        }
+    }
+
     /**
      * !!MOCK!!
      * Tries to signInNewUser

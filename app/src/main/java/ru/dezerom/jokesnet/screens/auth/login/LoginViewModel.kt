@@ -14,7 +14,7 @@ class LoginViewModel @Inject constructor(
     private val authRepo: AuthenticationRepository
 ): ViewModel() {
 
-    private val _uiState = MutableLiveData<LoginState>(LoginState.WaitingCredentials("", ""))
+    private val _uiState = MutableLiveData<LoginState>(LoginState.CheckingToken)
 
     /**
      * Current ui state
@@ -52,6 +52,14 @@ class LoginViewModel @Inject constructor(
      */
     val tryAgainBtnClicked = {
         _uiState.value = LoginState.WaitingCredentials("", "")
+    }
+
+    init {
+        viewModelScope.launch {
+            val token = authRepo.getToken()
+            if (token != null) _uiState.postValue(LoginState.Success)
+            else _uiState.postValue(LoginState.WaitingCredentials("", ""))
+        }
     }
 
     private fun getWaitingForCredentialsState(): LoginState.WaitingCredentials {

@@ -8,7 +8,7 @@ import androidx.room.Query
 interface TokenDao {
 
     @Query("SELECT * FROM token")
-    fun selectToken(): Token
+    fun selectToken(): Token?
 
     @Insert
     fun insertToken(token: Token)

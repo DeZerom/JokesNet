@@ -14,4 +14,5 @@
     <string name="account_exists_string">Ты уже смешарик, чел</string>
     <string name="have_to_login">Просто залогинся, чел</string>
     <string name="dude_string">Чел...</string>
+    <string name="checkingToken_joke">ПроверОЧКА размера шляпы</string>
 </resources>

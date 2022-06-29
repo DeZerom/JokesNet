@@ -13,4 +13,5 @@
     <string name="account_exists_string">You are already have an account, dude</string>
     <string name="have_to_login">Just log in, dude</string>
     <string name="dude_string">Dude...</string>
+    <string name="checkingToken_joke">Checking a hat size</string>
 </resources>

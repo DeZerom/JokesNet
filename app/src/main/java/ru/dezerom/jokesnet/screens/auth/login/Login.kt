@@ -1,8 +1,10 @@
 package ru.dezerom.jokesnet.screens.auth.login
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
@@ -45,6 +47,7 @@ fun Login(
                 navController
             )
             LoginState.Success -> navController.navigate(Screens.PROFILE.route())
+            LoginState.CheckingToken -> CheckingToken()
             LoginState.WrongCredentials, null -> Error(viewModel)
         }
     }
@@ -94,6 +97,14 @@ fun Error(viewModel: LoginViewModel) {
     FullWidthButton(
         onClick = viewModel.tryAgainBtnClicked,
         text = stringResource(R.string.try_again_string))
+}
+
+@Composable
+fun CheckingToken() {
+    CircularProgressIndicator(
+        modifier = Modifier.fillMaxSize(0.5F)
+    )
+    Text(text = stringResource(R.string.checkingToken_joke))
 }
 
 @Preview
