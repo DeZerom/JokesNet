@@ -17,9 +17,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import ru.dezerom.jokesnet.R
 import ru.dezerom.jokesnet.screens.FirstLevelDestinations
-import ru.dezerom.jokesnet.screens.auth.Loading
 import ru.dezerom.jokesnet.screens.widgets.FullWidthButton
 import ru.dezerom.jokesnet.screens.widgets.FullWidthTextField
+import ru.dezerom.jokesnet.screens.widgets.Loading
 
 @Composable
 fun Registration(

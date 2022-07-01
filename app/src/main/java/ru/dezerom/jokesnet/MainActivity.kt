@@ -75,7 +75,7 @@ class MainActivity : ComponentActivity() {
                             route = FirstLevelDestinations.NESTED_SCREENS.route()
                         ) {
                             composable(NestedDestinations.PROFILE.route) {
-                                ProfileScreen()
+                                ProfileScreen(navController, hiltViewModel())
                             }
                             composable(NestedDestinations.SOME_SCREEN.route) { SomeScreen() }
                         }

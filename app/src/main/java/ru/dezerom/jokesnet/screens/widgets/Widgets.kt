@@ -1,14 +1,16 @@
 package ru.dezerom.jokesnet.screens.widgets
 
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import ru.dezerom.jokesnet.R
 
 @Composable
         /**
@@ -45,5 +47,27 @@ fun FullWidthTextField(
             .fillMaxWidth(),
         label = { Text(text = labelText) },
         visualTransformation = visualTransformation
+    )
+}
+
+@Composable
+fun TextWithPadding(
+    text: String
+) {
+    Text(
+        text = text,
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+    )
+}
+
+@Composable
+fun Loading() {
+    CircularProgressIndicator(
+        modifier = Modifier.fillMaxSize(0.5F)
+    )
+    Spacer(modifier = Modifier.height(16.dp))
+    Text(
+        text = stringResource(R.string.loading_joke),
+        modifier = Modifier.padding(horizontal = 16.dp)
     )
 }

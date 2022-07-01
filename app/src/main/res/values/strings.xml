@@ -12,7 +12,9 @@
     <string name="successfull_signingIn_string">Nice! You are allowed to have a fun now</string>
     <string name="account_exists_string">You are already have an account, dude</string>
     <string name="have_to_login">Just log in, dude</string>
-    <string name="dude_string">Dude...</string>
+    <string name="dude_string">Dude…</string>
     <string name="checkingToken_joke">Checking a hat size</string>
     <string name="profile_string">Profile</string>
+    <string name="profileScreen_error_string">Task successfully failed</string>
+    <string name="profileScreen_error_promt">Check your Internet connection or try to log in again. It may help. Maybe</string>
 </resources>
