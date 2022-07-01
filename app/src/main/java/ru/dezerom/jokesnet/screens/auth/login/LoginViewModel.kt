@@ -68,8 +68,8 @@ class LoginViewModel @Inject constructor(
      * Navigates to the nested graph and changes the [uiState] to [CheckingToken]
      */
     fun navigateToNestedScreens(event: Event) {
+        _uiState.value = LoginState.CheckingToken
         event.obtainEvent()
-        _uiState.value = LoginState.WaitingCredentials("", "'")
     }
 
     private fun getWaitingForCredentialsState(): LoginState.WaitingCredentials {

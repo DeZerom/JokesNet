@@ -8,5 +8,4 @@ import androidx.navigation.NavController
 @Composable
 fun ProfileScreen() {
     Text(text = "some profile")
-    Log.i("Profile", "navigated here")
 }

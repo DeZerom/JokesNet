@@ -1,7 +1,9 @@
 package ru.dezerom.jokesnet
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
@@ -23,6 +25,7 @@ import ru.dezerom.jokesnet.screens.auth.registration.Registration
 import ru.dezerom.jokesnet.screens.profile.ProfileScreen
 import ru.dezerom.jokesnet.ui.theme.JokesNetTheme
 import ru.dezerom.jokesnet.ui.theme.Teal200
+import kotlin.system.exitProcess
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -35,6 +38,14 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = { BottomNavigationBar(navController = navController) }
                 ) {
+                    BackHandler(true) {
+                        val dest = navController.currentDestination?.route
+                        if (dest != FirstLevelDestinations.LOGIN.route() &&
+                            dest != FirstLevelDestinations.REGISTRATION.route()) {
+                            finishAffinity()
+                            exitProcess(0)
+                        }
+                    }
                     NavHost(
                         navController = navController,
                         startDestination = FirstLevelDestinations.LOGIN.route(),
