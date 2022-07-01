@@ -1,5 +1,7 @@
 package ru.dezerom.jokesnet.repositories
 
+import android.content.SharedPreferences
+import androidx.core.content.edit
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -11,16 +13,17 @@ import ru.dezerom.jokesnet.db.token.TokenDao
 import ru.dezerom.jokesnet.net.FORBIDDEN
 import ru.dezerom.jokesnet.net.JokesNetServerApi
 import ru.dezerom.jokesnet.net.auth.Credentials
+import ru.dezerom.jokesnet.net.auth.NetToken
 import ru.dezerom.jokesnet.utils.sha256
 import javax.inject.Inject
 
 class AuthenticationRepository @Inject constructor(
     private val apiService: JokesNetServerApi,
-    private val tokenDao: TokenDao
+    private val sharedPreferences: SharedPreferences
 ) {
 
     /**
-     * Checks users credentials and saves the token in the database.
+     * Checks users credentials and saves the token in the shared preferences.
      * @return true if login and password are correct, otherwise false
      */
     suspend fun performLogin(login: String, password: String): Boolean {
@@ -30,7 +33,10 @@ class AuthenticationRepository @Inject constructor(
 
             if (response.isSuccessful) {
                 response.body()?.token?.let {
-                    tokenDao.insertToken(Token(it))
+                    sharedPreferences.edit {
+                        putString(SHARED_PREFS_TOKEN_KEY, it)
+                        commit()
+                    }
                 } ?: return@withContext false
             } else if (response.code() == FORBIDDEN) return@withContext false
 
@@ -38,14 +44,32 @@ class AuthenticationRepository @Inject constructor(
         }
     }
 
-    suspend fun getToken(): Token? {
+
+    /**
+     * Tries to get the auth token
+     * @return [Token] if token exists, null otherwise
+     */
+    suspend fun getToken(): String? {
         return withContext(Dispatchers.IO) {
-            tokenDao.selectToken()
+            val token = sharedPreferences.getString(SHARED_PREFS_TOKEN_KEY, null)
+            token
         }
     }
 
     /**
-     * !!MOCK!!
+     * Sends the token to the server to check if it valid
+     * @return true if token is valid, false otherwise
+     */
+    suspend fun checkToken(token: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            val netToken = NetToken(token)
+            val call = apiService.checkToken(netToken)
+
+            call.awaitResponse().isSuccessful
+        }
+    }
+
+    /**
      * Tries to signInNewUser
      * @return true if new user is signed in, otherwise false
      */
@@ -56,6 +80,10 @@ class AuthenticationRepository @Inject constructor(
 
             response.isSuccessful
         }
+    }
+
+    companion object {
+        const val SHARED_PREFS_TOKEN_KEY = "token"
     }
 
 }

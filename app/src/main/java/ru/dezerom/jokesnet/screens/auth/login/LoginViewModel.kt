@@ -56,10 +56,15 @@ class LoginViewModel @Inject constructor(
         _uiState.value = LoginState.WaitingCredentials("", "")
     }
 
+    //checking users token from shared preferences
     init {
         viewModelScope.launch {
             val token = authRepo.getToken()
-            if (token != null) _uiState.postValue(LoginState.Success)
+            val isTokenValid = token?.let {
+                authRepo.checkToken(it)
+            } ?: false
+
+            if(isTokenValid) _uiState.postValue(LoginState.Success)
             else _uiState.postValue(LoginState.WaitingCredentials("", ""))
         }
     }

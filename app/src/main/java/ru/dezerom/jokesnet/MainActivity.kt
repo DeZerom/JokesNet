@@ -36,7 +36,15 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    bottomBar = { BottomNavigationBar(navController = navController) }
+                    bottomBar = {
+                        val route = navController.currentDestination?.route
+                        if (route != FirstLevelDestinations.LOGIN.route()
+                            && route != FirstLevelDestinations.REGISTRATION.route()
+                            && route != null
+                        ) {
+                            BottomNavigationBar(navController = navController)
+                        }
+                    }
                 ) {
                     BackHandler(true) {
                         val dest = navController.currentDestination?.route
