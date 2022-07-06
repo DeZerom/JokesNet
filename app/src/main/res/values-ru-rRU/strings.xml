@@ -17,5 +17,6 @@
     <string name="checkingToken_joke">ПроверОЧКА размера шляпы</string>
     <string name="profile_string">Профиль</string>
     <string name="profileScreen_error_string">Задача успешно провалена</string>
-    <string name="profileScreen_error_promt">Проверь инет или попробуй залогинться снова. Это может помочь. Наверное</string>
+    <string name="profileScreen_error_advise">Проверь инет или попробуй залогинться снова. Это может помочь. Наверное</string>
+    <string name="jokes_added_string">Шуток добавлено</string>
 </resources>

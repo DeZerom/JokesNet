@@ -1,7 +1,6 @@
 package ru.dezerom.jokesnet
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -34,10 +33,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             JokesNetTheme {
                 val navController = rememberNavController()
+                val currentDestination by navController.currentBackStackEntryAsState()
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
-                        val route = navController.currentDestination?.route
+                        val route = currentDestination?.destination?.route
                         if (route != FirstLevelDestinations.LOGIN.route()
                             && route != FirstLevelDestinations.REGISTRATION.route()
                             && route != null
@@ -47,9 +47,9 @@ class MainActivity : ComponentActivity() {
                     }
                 ) {
                     BackHandler(true) {
-                        val dest = navController.currentDestination?.route
-                        if (dest != FirstLevelDestinations.LOGIN.route() &&
-                            dest != FirstLevelDestinations.REGISTRATION.route()) {
+                        val route = currentDestination?.destination?.route
+                        if (route != FirstLevelDestinations.LOGIN.route() &&
+                            route != FirstLevelDestinations.REGISTRATION.route()) {
                             finishAffinity()
                             exitProcess(0)
                         }

@@ -1,6 +1,5 @@
 package ru.dezerom.jokesnet.screens.profile
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
@@ -24,11 +23,12 @@ fun ProfileScreen(
     viewModel: ProfileViewModel
 ) {
     val state by viewModel.uiState.observeAsState()
-    Log.i("ProfileScreen", navController.currentDestination?.route ?: "null dest")
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 48.dp)
     ) {
         when (state) {
             ProfileScreenState.Error, null -> Error(navController, viewModel)
@@ -59,7 +59,7 @@ fun Error(
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
     )
     Text(
-        text = stringResource(R.string.profileScreen_error_promt),
+        text = stringResource(R.string.profileScreen_error_advise),
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
     )
     FullWidthButton(
@@ -74,20 +74,44 @@ fun Error(
 
 @Composable
 fun ShowingProfileScreen(state: ProfileScreenState.ShowingProfile) {
+    ProfileInfoRow(
+        headerText = stringResource(id = R.string.login_string) + ":",
+        infoString = state.profileInfo.login
+    )
+    ProfileInfoRow(
+        headerText = stringResource(id = R.string.jokes_added_string) + ":",
+        infoString = state.profileInfo.jokesAdded.toString()
+    )
+}
+
+@Composable
+fun ProfileInfoRow(headerText: String, infoString: String) {
     Row(
         verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.Start,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxWidth()
     ) {
-        Text(
-            text = stringResource(R.string.login_string),
-            Modifier.padding(top = 16.dp, bottom = 16.dp, start = 16.dp, end = 8.dp)
-        )
-        Text(
-            text = state.login,
-            Modifier.padding(top = 16.dp, bottom = 16.dp, start = 8.dp, end = 16.dp)
-        )
+        Header(text = headerText)
+        Info(text = infoString)
     }
+}
+
+@Composable
+fun Header(text: String) {
+    Text(
+        text = text,
+        Modifier
+            .fillMaxWidth(0.35F)
+            .padding(top = 16.dp, bottom = 16.dp, start = 16.dp, end = 8.dp)
+    )
+}
+
+@Composable
+fun Info(text: String) {
+    Text(
+        text = text,
+        Modifier.padding(top = 16.dp, bottom = 16.dp, start = 8.dp, end = 16.dp)
+    )
 }
 
 @Composable
