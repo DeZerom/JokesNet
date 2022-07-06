@@ -7,5 +7,6 @@ import androidx.room.PrimaryKey
 data class DbProfileInfo(
     @PrimaryKey(autoGenerate = true) val id: Int,
     val login: String,
-    val jokesAdded: Int
+    val jokesAdded: Int,
+    val isValid: Boolean
 )

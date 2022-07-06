@@ -1,9 +1,11 @@
 package ru.dezerom.jokesnet.screens.profile
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -116,7 +118,9 @@ fun Info(text: String) {
 
 @Composable
 fun Loading(viewModel: ProfileViewModel) {
-    val event = ProfileScreenEvent.ProfileInfoQueried
-    viewModel.obtainEvent(event)
+    LaunchedEffect(key1 = Unit) {
+        val event = ProfileScreenEvent.ProfileInfoQueried
+        viewModel.obtainEvent(event)
+    }
     LoadingWidget()
 }

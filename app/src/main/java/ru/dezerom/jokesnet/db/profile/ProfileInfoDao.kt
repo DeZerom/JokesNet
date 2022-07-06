@@ -8,8 +8,8 @@ import androidx.room.Update
 @Dao
 interface ProfileInfoDao {
 
-    @Query("SELECT * FROM ProfileInfo")
-    fun selectProfileInfo(): DbProfileInfo
+    @Query("SELECT * FROM ProfileInfo LIMIT 1")
+    fun selectProfileInfo(): DbProfileInfo?
 
     @Insert
     fun insertProfileInfo(profileInfo: DbProfileInfo)
