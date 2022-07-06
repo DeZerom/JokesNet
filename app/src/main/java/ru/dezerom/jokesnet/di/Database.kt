@@ -8,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ru.dezerom.jokesnet.db.JokesNetDatabase
+import ru.dezerom.jokesnet.db.profile.ProfileInfoDao
 import ru.dezerom.jokesnet.db.token.TokenDao
 import javax.inject.Singleton
 
@@ -19,12 +20,13 @@ object DatabaseModule {
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): JokesNetDatabase {
         return Room.databaseBuilder(context, JokesNetDatabase::class.java, "JokesNetDatabase")
+            .addMigrations(JokesNetDatabase.MIGRATION_1_2)
             .build()
     }
 
     @Provides
-    fun provideTokenDao(database: JokesNetDatabase): TokenDao {
-        return database.getTokenDao()
+    fun provideProfileInfoDao(db: JokesNetDatabase): ProfileInfoDao {
+        return db.getProfileInfo()
     }
 
 }
