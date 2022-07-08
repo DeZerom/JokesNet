@@ -18,4 +18,10 @@
     <string name="profileScreen_error_string">Task successfully failed</string>
     <string name="profileScreen_error_advise">Check your Internet connection or try to log in again. It may help. Maybe</string>
     <string name="jokes_added_string">Jokes added</string>
+    <string name="text_of_a_joke_string">Text of joke here</string>
+    <string name="add_joke_string">Add joke</string>
+    <string name="joke_added_successfully_sting">Joke added successfully</string>
+    <string name="joke_notAdded_string">Joke hasn\'t been added</string>
+    <string name="joke_notAdded_advice">Joke have to be not blank and less than 500 characters.</string>
+    <string name="and_string">And</string>
 </resources>

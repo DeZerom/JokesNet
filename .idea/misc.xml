@@ -3,7 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Demid/Projects/JokesNet/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.275" />
+        <entry key="..\:/Demid/Projects/JokesNet/app/src/main/res/drawable/ic_baseline_add_task_24.xml" value="0.275" />
         <entry key="..\:/Demid/Projects/JokesNet/app/src/main/res/drawable/ic_baseline_back_hand_24.xml" value="0.196" />
+        <entry key="..\:/Demid/Projects/JokesNet/app/src/main/res/drawable/ic_baseline_check_24.xml" value="0.275" />
+        <entry key="..\:/Demid/Projects/JokesNet/app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.275" />
+        <entry key="..\:/Demid/Projects/JokesNet/app/src/main/res/drawable/ic_launcher_background.xml" value="0.275" />
       </map>
     </option>
   </component>

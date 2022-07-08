@@ -21,6 +21,7 @@ import ru.dezerom.jokesnet.screens.FirstLevelDestinations
 import ru.dezerom.jokesnet.screens.NestedDestinations
 import ru.dezerom.jokesnet.screens.auth.login.Login
 import ru.dezerom.jokesnet.screens.auth.registration.Registration
+import ru.dezerom.jokesnet.screens.joke_add.AddJokeScreen
 import ru.dezerom.jokesnet.screens.profile.ProfileScreen
 import ru.dezerom.jokesnet.ui.theme.JokesNetTheme
 import ru.dezerom.jokesnet.ui.theme.Teal200
@@ -77,7 +78,9 @@ class MainActivity : ComponentActivity() {
                             composable(NestedDestinations.PROFILE.route) {
                                 ProfileScreen(navController, hiltViewModel())
                             }
-                            composable(NestedDestinations.SOME_SCREEN.route) { SomeScreen() }
+                            composable(NestedDestinations.ADD_JOKE.route) {
+                                AddJokeScreen(viewModel = hiltViewModel())
+                            }
                         }
                     }
                 }
@@ -87,13 +90,8 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun SomeScreen() {
-    Text(text = "some screen")
-}
-
-@Composable
 fun BottomNavigationBar(navController: NavController) {
-    val items = listOf(NestedDestinations.PROFILE, NestedDestinations.SOME_SCREEN)
+    val items = listOf(NestedDestinations.PROFILE, NestedDestinations.ADD_JOKE)
 
     BottomNavigation(
         backgroundColor = Teal200,
