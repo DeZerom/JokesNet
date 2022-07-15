@@ -6,6 +6,8 @@ import retrofit2.http.POST
 import ru.dezerom.jokesnet.net.auth.Credentials
 import ru.dezerom.jokesnet.net.auth.LoginResponse
 import ru.dezerom.jokesnet.net.auth.NetToken
+import ru.dezerom.jokesnet.net.joke.NetJoke
+import ru.dezerom.jokesnet.net.joke.NetJokeAdd
 import ru.dezerom.jokesnet.net.profile.NetProfileInfo
 
 interface JokesNetServerApi {
@@ -21,6 +23,9 @@ interface JokesNetServerApi {
 
     @POST("/profile")
     fun getProfileInfo(): Call<NetProfileInfo>
+
+    @POST("jokes/add")
+    fun addJoke(@Body joke: NetJokeAdd): Call<NetJoke>
 
     companion object {
         const val AUTH_HEADER = "Authorization"
