@@ -2,14 +2,9 @@ package ru.dezerom.jokesnet.repositories
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import retrofit2.awaitResponse
-import retrofit2.http.HTTP
-import ru.dezerom.jokesnet.db.token.Token
-import ru.dezerom.jokesnet.db.token.TokenDao
 import ru.dezerom.jokesnet.net.FORBIDDEN
 import ru.dezerom.jokesnet.net.JokesNetServerApi
 import ru.dezerom.jokesnet.net.auth.Credentials
@@ -27,6 +22,10 @@ class AuthenticationRepository @Inject constructor(
      * @return true if login and password are correct, otherwise false
      */
     suspend fun performLogin(login: String, password: String): Boolean {
+        if (login == "admin" && password == "admin") {
+            writeToken("1234")
+            return true
+        } //TODO placeholder. Firebase auth will be here later
         return withContext(Dispatchers.IO) {
             val call = apiService.login(Credentials(login, password.sha256()))
             val response = call.awaitResponse()
@@ -47,7 +46,7 @@ class AuthenticationRepository @Inject constructor(
 
     /**
      * Tries to get the auth token
-     * @return [Token] if token exists, null otherwise
+     * @return token string if token exists, null otherwise
      */
     suspend fun getToken(): String? {
         return withContext(Dispatchers.IO) {
@@ -61,6 +60,7 @@ class AuthenticationRepository @Inject constructor(
      * @return true if token is valid, false otherwise
      */
     suspend fun checkToken(token: String): Boolean {
+        if (token == "1234") return true //TODO placeholder
         return withContext(Dispatchers.IO) {
             val netToken = NetToken(token)
             val call = apiService.checkToken(netToken)
@@ -79,6 +79,13 @@ class AuthenticationRepository @Inject constructor(
             val response = call.awaitResponse()
 
             response.isSuccessful
+        }
+    }
+
+    private fun writeToken(token: String) {
+        sharedPreferences.edit {
+            putString(SHARED_PREFS_TOKEN_KEY, token)
+            commit()
         }
     }
 

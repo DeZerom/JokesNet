@@ -24,6 +24,7 @@ class ProfileRepository @Inject constructor(
      * @return [ProfileInfo] or null if some error occurred
      */
     suspend fun getProfileInfo(): ProfileInfo? {
+        return ProfileInfo("admin", 666) //TODO placeholder
         return withContext(Dispatchers.IO) {
             val dbProfile = profileDao.selectProfileInfo()
             val id = dbProfile?.id ?: 0

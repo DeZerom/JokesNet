@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "944460042257",
+    "firebase_url": "https://jokesnetserver-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "jokesnetserver",
+    "storage_bucket": "jokesnetserver.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:944460042257:android:9b4791d44624e32e45a1b0",
+        "android_client_info": {
+          "package_name": "ru.dezerom.jokesnet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "944460042257-ajga7uosd4qh4c0535sd4irksna3n74f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRS_YX3bn4bqw8KDjfS-OtJxEh5CPDtEg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "944460042257-ajga7uosd4qh4c0535sd4irksna3n74f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
