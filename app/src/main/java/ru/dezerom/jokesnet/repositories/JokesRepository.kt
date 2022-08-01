@@ -24,6 +24,7 @@ class JokesRepository @Inject constructor(
      * Adds a new joke with provided [text]
      * @return true if joke was added successfully, false otherwise
      */
+    @Suppress("ControlFlowWithEmptyBody")
     suspend fun addJoke(text: String): Boolean {
         if (text.isBlank()) return false
 
@@ -36,7 +37,7 @@ class JokesRepository @Inject constructor(
             }
         return withContext(Dispatchers.IO) {
             while (res == null) {}
-            res!!
+            res ?: false
         }
     }
 

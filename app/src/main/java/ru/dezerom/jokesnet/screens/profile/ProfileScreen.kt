@@ -1,6 +1,5 @@
 package ru.dezerom.jokesnet.screens.profile
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
@@ -57,11 +56,11 @@ fun Error(
             .padding(horizontal = 16.dp, vertical = 8.dp)
     )
     Text(
-        text = stringResource(R.string.profileScreen_error_string),
+        text = stringResource(R.string.unknown_error_string),
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
     )
     Text(
-        text = stringResource(R.string.profileScreen_error_advise),
+        text = stringResource(R.string.unknow_error_advise),
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
     )
     FullWidthButton(

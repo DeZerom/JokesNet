@@ -86,3 +86,11 @@ fun Error(text: String, advice: String) {
     TextWithPadding(text = text)
     TextWithPadding(text = advice)
 }
+
+@Composable
+fun DoNotKnowWTFTheErrorIs() {
+    Error(
+        text = stringResource(id = R.string.unknown_error_string),
+        advice = stringResource(id = R.string.unknow_error_advise)
+    )
+}

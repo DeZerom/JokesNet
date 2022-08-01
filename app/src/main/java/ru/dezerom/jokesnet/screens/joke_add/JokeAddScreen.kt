@@ -67,7 +67,7 @@ fun ErrorScreen(viewModel: JokeAddViewModel) {
         text = stringResource(R.string.joke_notAdded_string),
         advice = stringResource(R.string.joke_notAdded_advice) + " " +
                 stringResource(R.string.and_string) + " ... " +
-                stringResource(R.string.profileScreen_error_advise)
+                stringResource(R.string.unknow_error_advise)
     )
     FullWidthButton(
         onClick = { viewModel.obtainEvent(JokeAddScreenEvent.TryAgainEvent) },

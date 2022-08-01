@@ -20,7 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import ru.dezerom.jokesnet.screens.FirstLevelDestinations
 import ru.dezerom.jokesnet.screens.NestedDestinations
 import ru.dezerom.jokesnet.screens.auth.login.Login
-import ru.dezerom.jokesnet.screens.auth.registration.Registration
+import ru.dezerom.jokesnet.screens.auth.registration.RegistrationScreen
 import ru.dezerom.jokesnet.screens.joke_add.AddJokeScreen
 import ru.dezerom.jokesnet.screens.profile.ProfileScreen
 import ru.dezerom.jokesnet.ui.theme.JokesNetTheme
@@ -66,7 +66,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(FirstLevelDestinations.REGISTRATION.route()) {
-                            Registration(
+                            RegistrationScreen(
                                 navController,
                                 hiltViewModel()
                             )

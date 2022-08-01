@@ -15,7 +15,7 @@ class RegistrationViewModel @Inject constructor(
 ): ViewModel() {
 
     private val _uiState =
-        MutableLiveData<RegistrationState>(RegistrationState.CreatingCredentials("", ""))
+        MutableLiveData<RegistrationState>(RegistrationState.CreatingCredentials("", "", ""))
 
     /**
      * Current ui state
@@ -23,44 +23,74 @@ class RegistrationViewModel @Inject constructor(
     val uiState: LiveData<RegistrationState> = _uiState
 
     /**
-     * Listener for login text field
+     * Obtains the given [event]. May change [uiState] value
      */
-    val loginChanged = { new: String ->
-        val state = getCreatingCredentialsState()
-        if (state.login != new) _uiState.value = state.copy(login = new)
+    fun obtainEvent(event: RegistrationScreenEvent) {
+        when(event) {
+            is RegistrationScreenEvent.CreateNewUserEvent -> obtainCreateNewUserEvent(event)
+            is RegistrationScreenEvent.TryAgainWhenUnknownErrorEvent -> obtainTryAgainWhenUnknownErrorEvent(event)
+            is RegistrationScreenEvent.MalformedEmailEvent -> obtainMalformedEmailEvent(event)
+            is RegistrationScreenEvent.WeakPasswordEvent -> obtainWeakPasswordEvent(event)
+            is RegistrationScreenEvent.EmailChangedEvent -> obtainEmailChangedEvent(event)
+            is RegistrationScreenEvent.LoginChangedEvent -> obtainLoginChangedEvent(event)
+            is RegistrationScreenEvent.PasswordChangedEvent -> obtainPasswordChangedEvent(event)
+        }
     }
 
-    /**
-     * Listener for password text field
-     */
-    val passChanged = { new: String ->
-        val state = getCreatingCredentialsState()
-        if (state.pass != new) _uiState.value = state.copy(pass = new)
-    }
-
-    val signIn = {
-        val state = getCreatingCredentialsState()
+    private fun obtainCreateNewUserEvent(event: RegistrationScreenEvent.CreateNewUserEvent) {
         _uiState.value = RegistrationState.Loading
+        val credentials = event.credentials
+        viewModelScope.launch {
+            val regStatus = authRepo.createNewUser(credentials.email, credentials.pass)
 
-        signInNewUser(state)
+            val newState = if (regStatus.isSuccessful) RegistrationState.Success
+            else {
+                with(AuthenticationRepository.RegistrationStatus) {
+                    val errorState = when(regStatus.reason) {
+                        ACCOUNT_EXISTS -> RegistrationState.AccountExists
+                        WEAK_PASSWORD -> RegistrationState.WeakPassword(credentials)
+                        MALFORMED_EMAIL -> RegistrationState.MalformedEmail(credentials)
+                        else -> RegistrationState.UnknownError(credentials)
+                    }
+                    errorState
+                }
+            }
+            _uiState.postValue(newState)
+        }
+    }
+
+    private fun obtainTryAgainWhenUnknownErrorEvent(event: RegistrationScreenEvent.TryAgainWhenUnknownErrorEvent) {
+        _uiState.value = event.credentials
+    }
+
+    private fun obtainMalformedEmailEvent(event: RegistrationScreenEvent.MalformedEmailEvent) {
+        _uiState.value = event.credentials
+        event.obtainEvent()
+    }
+
+    private fun obtainWeakPasswordEvent(event: RegistrationScreenEvent.WeakPasswordEvent) {
+        _uiState.value = event.credentials
+        event.obtainEvent()
+    }
+
+    private fun obtainEmailChangedEvent(event: RegistrationScreenEvent.EmailChangedEvent) {
+        val state = getCreatingCredentialsState()
+        _uiState.value = state.copy(email = event.newEmail)
+    }
+
+    private fun obtainLoginChangedEvent(event: RegistrationScreenEvent.LoginChangedEvent) {
+        val state = getCreatingCredentialsState()
+        _uiState.value = state.copy(login = event.newLogin)
+    }
+
+    private fun obtainPasswordChangedEvent(event: RegistrationScreenEvent.PasswordChangedEvent) {
+        val state = getCreatingCredentialsState()
+        _uiState.value = state.copy(pass = event.newPassword)
     }
 
     private fun getCreatingCredentialsState(): RegistrationState.CreatingCredentials {
-        val state = uiState.value ?: throw IllegalStateException("Impossible exception thrown. Null uiState")
-
-        if (state !is RegistrationState.CreatingCredentials)
-            throw IllegalStateException("Got $state but expected instance of CreatingCredentials")
-
-        return state
-    }
-
-    private fun signInNewUser(state: RegistrationState.CreatingCredentials) {
-        viewModelScope.launch {
-            val isSuccess = authRepo.signInNewUser(state.login, state.pass)
-
-            if (isSuccess) _uiState.postValue(RegistrationState.Success)
-            else _uiState.postValue(RegistrationState.AccountExists)
-        }
+        return  uiState.value as? RegistrationState.CreatingCredentials
+                ?: RegistrationState.CreatingCredentials("", "", "")
     }
 
 }

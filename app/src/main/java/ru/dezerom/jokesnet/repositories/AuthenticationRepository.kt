@@ -2,6 +2,10 @@ package ru.dezerom.jokesnet.repositories
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.awaitResponse
@@ -14,7 +18,8 @@ import javax.inject.Inject
 
 class AuthenticationRepository @Inject constructor(
     private val apiService: JokesNetServerApi,
-    private val sharedPreferences: SharedPreferences
+    private val sharedPreferences: SharedPreferences,
+    private val authService: FirebaseAuth
 ) {
 
     /**
@@ -73,12 +78,26 @@ class AuthenticationRepository @Inject constructor(
      * Tries to signInNewUser
      * @return true if new user is signed in, otherwise false
      */
-    suspend fun signInNewUser(login: String, password: String): Boolean {
-        return withContext(Dispatchers.IO) {
-            val call = apiService.signIn(Credentials(login, password.sha256()))
-            val response = call.awaitResponse()
+    @Suppress("ControlFlowWithEmptyBody")
+    suspend fun createNewUser(email: String, password: String): RegistrationStatus {
+        var result: RegistrationStatus? = null
+        authService.createUserWithEmailAndPassword(email, password.sha256())
+            .addOnSuccessListener {
+                result = RegistrationStatus(true, null)
+            }
+            .addOnFailureListener {
+                val reason = when(it) {
+                    is FirebaseAuthWeakPasswordException -> RegistrationStatus.WEAK_PASSWORD
+                    is FirebaseAuthInvalidCredentialsException -> RegistrationStatus.MALFORMED_EMAIL
+                    is FirebaseAuthUserCollisionException -> RegistrationStatus.ACCOUNT_EXISTS
+                    else -> RegistrationStatus.UNKNOWN_ERROR
+                }
+                result = RegistrationStatus(false, reason)
+            }
 
-            response.isSuccessful
+        return withContext(Dispatchers.IO) {
+            while (result == null) {}
+            result ?: RegistrationStatus(false, RegistrationStatus.UNKNOWN_ERROR)
         }
     }
 
@@ -86,6 +105,15 @@ class AuthenticationRepository @Inject constructor(
         sharedPreferences.edit {
             putString(SHARED_PREFS_TOKEN_KEY, token)
             commit()
+        }
+    }
+
+    class RegistrationStatus(val isSuccessful: Boolean, val reason: Int?) {
+        companion object {
+            const val ACCOUNT_EXISTS = -1
+            const val MALFORMED_EMAIL = -2
+            const val WEAK_PASSWORD = -3
+            const val UNKNOWN_ERROR = -4
         }
     }
 

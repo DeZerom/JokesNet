@@ -16,8 +16,8 @@
     <string name="dude_string">Чел…</string>
     <string name="checkingToken_joke">ПроверОЧКА размера шляпы</string>
     <string name="profile_string">Профиль</string>
-    <string name="profileScreen_error_string">Задача успешно провалена</string>
-    <string name="profileScreen_error_advise">Проверь инет или попробуй залогинться снова. Это может помочь. Наверное</string>
+    <string name="unknown_error_string">Задача успешно провалена</string>
+    <string name="unknow_error_advise">Проверь инет или попробуй залогинться снова. Это может помочь. Наверное</string>
     <string name="jokes_added_string">Шуток добавлено</string>
     <string name="text_of_a_joke_string">Текст шутейки сюда</string>
     <string name="add_joke_string">Довить шутку</string>
@@ -25,4 +25,6 @@
     <string name="joke_notAdded_string">Шутка не была добавлена</string>
     <string name="joke_notAdded_advice">Шутка не должна быть пустой и ее длина не должно преввышать 500 символов.</string>
     <string name="and_string">И</string>
+    <string name="wrong_email_string">Неверный емаил, чел</string>
+    <string name="weak_password_string">Твой пароль пахнет слабостью.</string>
 </resources>

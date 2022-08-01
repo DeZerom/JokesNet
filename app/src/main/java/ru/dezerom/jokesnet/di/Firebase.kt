@@ -1,5 +1,7 @@
 package ru.dezerom.jokesnet.di
 
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
@@ -17,6 +19,11 @@ object FirebaseModule {
     @Provides
     fun provideFirestoreRef(): FirebaseFirestore {
         return Firebase.firestore
+    }
+
+    @Provides
+    fun provideAuth(): FirebaseAuth {
+        return Firebase.auth
     }
 
     @Provides
