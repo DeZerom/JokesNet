@@ -41,7 +41,7 @@ class RegistrationViewModel @Inject constructor(
         _uiState.value = RegistrationState.Loading
         val credentials = event.credentials
         viewModelScope.launch {
-            val regStatus = authRepo.createNewUser(credentials.email, credentials.pass)
+            val regStatus = authRepo.createNewUser(credentials.email, credentials.login, credentials.pass)
 
             val newState = if (regStatus.isSuccessful) RegistrationState.Success
             else {

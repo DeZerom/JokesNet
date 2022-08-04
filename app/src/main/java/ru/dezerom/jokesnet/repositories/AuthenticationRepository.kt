@@ -1,11 +1,9 @@
 package ru.dezerom.jokesnet.repositories
 
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.core.content.edit
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import com.google.firebase.auth.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.awaitResponse
@@ -75,29 +73,66 @@ class AuthenticationRepository @Inject constructor(
     }
 
     /**
-     * Tries to signInNewUser
-     * @return true if new user is signed in, otherwise false
+     * Tries to create a new user with given [email], [login] and [password]
+     * @return [RegistrationStatus] instance with value of [RegistrationStatus.isSuccessful] equals
+     * to true if new user is signed in, otherwise false. If [RegistrationStatus.isSuccessful] is
+     * true, then [RegistrationStatus.reason] is null. Otherwise it is non nul and equals one of the
+     * following. [RegistrationStatus.UNKNOWN_ERROR], [RegistrationStatus.WEAK_PASSWORD],
+     * [RegistrationStatus.ACCOUNT_EXISTS], [RegistrationStatus.MALFORMED_EMAIL]
      */
     @Suppress("ControlFlowWithEmptyBody")
-    suspend fun createNewUser(email: String, password: String): RegistrationStatus {
-        var result: RegistrationStatus? = null
+    suspend fun createNewUser(email: String, login: String, password: String): RegistrationStatus {
+        var regStatus: RegistrationStatus? = null
         authService.createUserWithEmailAndPassword(email, password.sha256())
             .addOnSuccessListener {
-                result = RegistrationStatus(true, null)
+                regStatus = RegistrationStatus(true, null)
             }
             .addOnFailureListener {
-                val reason = when(it) {
+                val reason = when (it) {
                     is FirebaseAuthWeakPasswordException -> RegistrationStatus.WEAK_PASSWORD
                     is FirebaseAuthInvalidCredentialsException -> RegistrationStatus.MALFORMED_EMAIL
                     is FirebaseAuthUserCollisionException -> RegistrationStatus.ACCOUNT_EXISTS
                     else -> RegistrationStatus.UNKNOWN_ERROR
                 }
-                result = RegistrationStatus(false, reason)
+                regStatus = RegistrationStatus(false, reason)
             }
 
+        var res = withContext(Dispatchers.IO) {
+            while (regStatus == null) {}
+            regStatus ?: RegistrationStatus(false, RegistrationStatus.UNKNOWN_ERROR)
+        }
+
+        res = if (res.isSuccessful) {
+            val isLoginChanged = changeLogin(login)
+            RegistrationStatus(
+                isSuccessful = isLoginChanged,
+                reason = if (isLoginChanged) null else RegistrationStatus.UNKNOWN_ERROR
+            )
+        } else {
+            res
+        }
+
+        return res
+    }
+
+    /**
+     * Changes user's login
+     * @return true if successful, false otherwise
+     */
+    @Suppress("ControlFlowWithEmptyBody")
+    suspend fun changeLogin(newLogin: String): Boolean {
+        var result: Boolean? = null
+        authService.currentUser?.updateProfile(
+            UserProfileChangeRequest.Builder().setDisplayName(newLogin).build())
+            ?.addOnSuccessListener {
+                result = true
+            }
+            ?.addOnFailureListener {
+                result = false
+            }
         return withContext(Dispatchers.IO) {
             while (result == null) {}
-            result ?: RegistrationStatus(false, RegistrationStatus.UNKNOWN_ERROR)
+            result ?: false
         }
     }
 
