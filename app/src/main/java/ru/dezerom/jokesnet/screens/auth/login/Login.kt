@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -18,11 +19,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import ru.dezerom.jokesnet.R
-import ru.dezerom.jokesnet.screens.Event
 import ru.dezerom.jokesnet.screens.FirstLevelDestinations
-import ru.dezerom.jokesnet.screens.widgets.FullWidthButton
-import ru.dezerom.jokesnet.screens.widgets.FullWidthTextField
-import ru.dezerom.jokesnet.screens.widgets.Loading
+import ru.dezerom.jokesnet.screens.widgets.*
 
 @Composable
 fun Login(
@@ -37,82 +35,119 @@ fun Login(
         modifier = Modifier.fillMaxSize()
     ) {
         when (state) {
-            LoginState.CheckingCredentials -> Loading()
-            is LoginState.WaitingCredentials -> CredentialInput(
+            LoginScreenState.CheckingCredentials -> Loading()
+            is LoginScreenState.WaitingCredentials -> CredentialInput(
                 viewModel,
-                state as LoginState.WaitingCredentials,
+                state as LoginScreenState.WaitingCredentials,
                 navController
             )
-            LoginState.Success -> {
-                val event = object : Event {
-                    override fun obtainEvent() {
-                        navController.navigate(FirstLevelDestinations.NESTED_SCREENS.route())
-                    }
-                }
-                viewModel.navigateToNestedScreens(event)
-            }
-            LoginState.CheckingToken -> CheckingToken()
-            LoginState.WrongCredentials, null -> Error(viewModel)
+            LoginScreenState.Success -> SuccessAction(
+                viewModel = viewModel,
+                navController = navController
+            )
+            LoginScreenState.CheckingToken -> CheckingToken()
+            is LoginScreenState.WrongCredentials -> WrongCredentialsScreen(
+                viewModel,
+                state as LoginScreenState.WrongCredentials
+            )
+            is LoginScreenState.UnknownErrorState, null -> UnknownErrorScreen(
+                viewModel = viewModel,
+                state = state as LoginScreenState.UnknownErrorState
+            )
         }
     }
 }
 
 @Composable
-fun CredentialInput(
+private fun CredentialInput(
     viewModel: LoginViewModel,
-    state: LoginState.WaitingCredentials,
+    state: LoginScreenState.WaitingCredentials,
     navController: NavController
 ) {
     //login text field
     FullWidthTextField(
-        value = state.login,
-        onValueChange = viewModel.loginChanged,
-        labelText = stringResource(id = R.string.login_string)
+        value = state.email,
+        onValueChange = { viewModel.obtainEvent(LoginScreenEvent.EmailChanged(it)) },
+        labelText = stringResource(id = R.string.email_string)
     )
     //password text field
     FullWidthTextField(
         value = state.pass,
-        onValueChange = viewModel.passChanged,
+        onValueChange = { viewModel.obtainEvent(LoginScreenEvent.PasswordChanged(it)) },
         labelText = stringResource(id = R.string.password_string),
         visualTransformation = PasswordVisualTransformation()
     )
     FullWidthButton(
-        onClick = viewModel.loginBtnClicked,
+        onClick = { viewModel.obtainEvent(LoginScreenEvent.LoginBtnClicked(state)) },
         text = stringResource(id = R.string.log_in_string)
     )
     FullWidthButton(
-        onClick = { navController.navigate(FirstLevelDestinations.REGISTRATION.route()) },
-        text = stringResource(R.string.sign_in_string))
+        onClick = {
+            viewModel.obtainEvent(LoginScreenEvent.RegistrationBtnClicked {
+                navController.navigate(FirstLevelDestinations.REGISTRATION.route())
+            })
+        },
+        text = stringResource(R.string.sign_in_string)
+    )
 }
 
 @Composable
-fun Error(viewModel: LoginViewModel) {
-    Image(
-        modifier = Modifier.fillMaxSize(0.5F),
-        painter = painterResource(id = R.drawable.ic_baseline_back_hand_24),
-        contentDescription = "Hand"
+private fun WrongCredentialsScreen(
+    viewModel: LoginViewModel,
+    state: LoginScreenState.WrongCredentials
+) {
+    Error(
+        text = stringResource(id = R.string.wrong_creds_joke),
+        advice = stringResource(id = R.string.wrong_credentials_string)
     )
-    Spacer(modifier = Modifier.height(16.dp))
-    Text(
-        text = stringResource(R.string.wrong_creds_joke),
-    )
-    Text(text = stringResource(R.string.wrong_credentials_string))
-    Spacer(modifier = Modifier.height(16.dp))
     FullWidthButton(
-        onClick = viewModel.tryAgainBtnClicked,
-        text = stringResource(R.string.try_again_string))
+        onClick = {
+            viewModel.obtainEvent(
+                LoginScreenEvent.TryAgainBtnClickedWhenWrongCredentials(state.credentials)
+            )
+        },
+        text = stringResource(R.string.try_again_string)
+    )
 }
 
 @Composable
-fun CheckingToken() {
+private fun CheckingToken() {
     CircularProgressIndicator(
         modifier = Modifier.fillMaxSize(0.5F)
     )
     Text(text = stringResource(R.string.checkingToken_joke))
 }
 
+@Composable
+private fun UnknownErrorScreen(
+    viewModel: LoginViewModel,
+    state: LoginScreenState.UnknownErrorState
+) {
+    DoNotKnowWTFTheErrorIs()
+    FullWidthButton(
+        onClick = {
+            viewModel.obtainEvent(
+                LoginScreenEvent.TryAgainBtnClickedWhenUnknownError(state.credentials)
+            )
+        },
+        text = stringResource(id = R.string.try_again_string)
+    )
+}
+
+@Composable
+private fun SuccessAction(
+    viewModel: LoginViewModel,
+    navController: NavController
+) {
+    LaunchedEffect(key1 = Unit) {
+        viewModel.obtainEvent(LoginScreenEvent.SuccessLoginEvent {
+            navController.navigate(FirstLevelDestinations.NESTED_SCREENS.route())
+        })
+    }
+}
+
 @Preview
 @Composable
-fun LoginPreview() {
+private fun LoginPreview() {
     Login(navController = rememberNavController(), viewModel())
 }

@@ -1,74 +1,47 @@
 package ru.dezerom.jokesnet.repositories
 
-import android.content.SharedPreferences
-import android.util.Log
-import androidx.core.content.edit
 import com.google.firebase.auth.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import retrofit2.awaitResponse
-import ru.dezerom.jokesnet.net.FORBIDDEN
-import ru.dezerom.jokesnet.net.JokesNetServerApi
-import ru.dezerom.jokesnet.net.auth.Credentials
-import ru.dezerom.jokesnet.net.auth.NetToken
 import ru.dezerom.jokesnet.utils.sha256
 import javax.inject.Inject
 
 class AuthenticationRepository @Inject constructor(
-    private val apiService: JokesNetServerApi,
-    private val sharedPreferences: SharedPreferences,
     private val authService: FirebaseAuth
 ) {
 
     /**
-     * Checks users credentials and saves the token in the shared preferences.
-     * @return true if login and password are correct, otherwise false
+     * `true` if user is currently logged in, `false` otherwise
      */
-    suspend fun performLogin(login: String, password: String): Boolean {
-        if (login == "admin" && password == "admin") {
-            writeToken("1234")
-            return true
-        } //TODO placeholder. Firebase auth will be here later
-        return withContext(Dispatchers.IO) {
-            val call = apiService.login(Credentials(login, password.sha256()))
-            val response = call.awaitResponse()
-
-            if (response.isSuccessful) {
-                response.body()?.token?.let {
-                    sharedPreferences.edit {
-                        putString(SHARED_PREFS_TOKEN_KEY, it)
-                        commit()
-                    }
-                } ?: return@withContext false
-            } else if (response.code() == FORBIDDEN) return@withContext false
-
-            return@withContext true
-        }
-    }
-
+    val isLoggedIn: Boolean
+        get() = authService.currentUser != null
 
     /**
-     * Tries to get the auth token
-     * @return token string if token exists, null otherwise
+     * Tries to sign in with the given credentials
+     * @return [SignInStatus] instance with [SignInStatus.isSuccessful] = `true`
+     * and [SignInStatus.reason] = null if credentials are valid or
+     * [SignInStatus.isSuccessful] = `false` and non-null value of [SignInStatus.reason] if some
+     * error occurs
      */
-    suspend fun getToken(): String? {
-        return withContext(Dispatchers.IO) {
-            val token = sharedPreferences.getString(SHARED_PREFS_TOKEN_KEY, null)
-            token
-        }
-    }
+    @Suppress("ControlFlowWithEmptyBody")
+    suspend fun performLogin(email: String, password: String): SignInStatus {
+        var status: SignInStatus? = null
+        authService.signInWithEmailAndPassword(email, password)
+            .addOnSuccessListener {
+                status = SignInStatus(true, null)
+            }
+            .addOnFailureListener {
+                val reason = when(it) {
+                    is FirebaseAuthInvalidCredentialsException -> SignInStatus.WRONG_PASSWORD
+                    is FirebaseAuthInvalidUserException -> SignInStatus.ACCOUNT_DOES_NOT_EXISTS
+                    else -> SignInStatus.UNKNOWN_ERROR
+                }
+                status = SignInStatus(false, reason)
+            }
 
-    /**
-     * Sends the token to the server to check if it valid
-     * @return true if token is valid, false otherwise
-     */
-    suspend fun checkToken(token: String): Boolean {
-        if (token == "1234") return true //TODO placeholder
         return withContext(Dispatchers.IO) {
-            val netToken = NetToken(token)
-            val call = apiService.checkToken(netToken)
-
-            call.awaitResponse().isSuccessful
+            while (status == null) {}
+            status ?: SignInStatus(false, SignInStatus.UNKNOWN_ERROR)
         }
     }
 
@@ -136,19 +109,26 @@ class AuthenticationRepository @Inject constructor(
         }
     }
 
-    private fun writeToken(token: String) {
-        sharedPreferences.edit {
-            putString(SHARED_PREFS_TOKEN_KEY, token)
-            commit()
-        }
-    }
-
+    /**
+     * Represents the status of creating user task
+     */
     class RegistrationStatus(val isSuccessful: Boolean, val reason: Int?) {
         companion object {
             const val ACCOUNT_EXISTS = -1
             const val MALFORMED_EMAIL = -2
             const val WEAK_PASSWORD = -3
             const val UNKNOWN_ERROR = -4
+        }
+    }
+
+    /**
+     * Represents the status of signing in task
+     */
+    class SignInStatus(val isSuccessful: Boolean, val reason: Int?) {
+        companion object {
+            const val ACCOUNT_DOES_NOT_EXISTS = -12
+            const val WRONG_PASSWORD = -13
+            const val UNKNOWN_ERROR = -14
         }
     }
 
