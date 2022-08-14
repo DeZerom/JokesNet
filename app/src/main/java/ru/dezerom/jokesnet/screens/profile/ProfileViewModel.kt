@@ -23,8 +23,8 @@ class ProfileViewModel @Inject constructor(
     fun obtainEvent(event: ProfileScreenEvent) {
         when (event) {
             ProfileScreenEvent.ProfileInfoQueried -> getProfileInfo()
-            is ProfileScreenEvent.NavigateOut -> navigateSomewhere(event)
-            ProfileScreenEvent.TryAgain -> tryAgainBtnClicked()
+            is ProfileScreenEvent.NavigatedOut -> navigateSomewhere(event)
+            ProfileScreenEvent.TriedAgain -> tryAgainBtnClicked()
         }
     }
 
@@ -37,7 +37,7 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    private fun navigateSomewhere(event: ProfileScreenEvent.NavigateOut) {
+    private fun navigateSomewhere(event: ProfileScreenEvent.NavigatedOut) {
         event.obtainEvent()
         _uiState.value = ProfileScreenState.Loading
     }

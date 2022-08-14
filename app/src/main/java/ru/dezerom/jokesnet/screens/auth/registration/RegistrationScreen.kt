@@ -3,6 +3,7 @@ package ru.dezerom.jokesnet.screens.auth.registration
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -72,7 +74,8 @@ fun CreatingCredentialsScreen(
     FullWidthTextField(
         value = state.email,
         onValueChange = { viewModel.obtainEvent(RegistrationScreenEvent.EmailChangedEvent(it)) },
-        labelText = stringResource(R.string.email_string)
+        labelText = stringResource(R.string.email_string),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
     )
     //login text field
     FullWidthTextField(
@@ -85,7 +88,8 @@ fun CreatingCredentialsScreen(
         value = state.pass,
         onValueChange = { viewModel.obtainEvent(RegistrationScreenEvent.PasswordChangedEvent(it)) },
         labelText = stringResource(R.string.password_string),
-        visualTransformation = PasswordVisualTransformation()
+        visualTransformation = PasswordVisualTransformation(),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
     )
     FullWidthButton(
         onClick = { viewModel.obtainEvent(RegistrationScreenEvent.CreateNewUserEvent(state)) },

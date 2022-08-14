@@ -1,5 +1,6 @@
 package ru.dezerom.jokesnet.repositories
 
+import android.util.Log
 import com.google.firebase.auth.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -31,6 +32,7 @@ class AuthenticationRepository @Inject constructor(
                 status = SignInStatus(true, null)
             }
             .addOnFailureListener {
+                Log.e("AuthRepo", it.toString())
                 val reason = when(it) {
                     is FirebaseAuthInvalidCredentialsException -> SignInStatus.WRONG_PASSWORD
                     is FirebaseAuthInvalidUserException -> SignInStatus.ACCOUNT_DOES_NOT_EXISTS
@@ -41,6 +43,7 @@ class AuthenticationRepository @Inject constructor(
 
         return withContext(Dispatchers.IO) {
             while (status == null) {}
+            Log.e("AuthRepo", "${status?.isSuccessful} ${status?.reason}")
             status ?: SignInStatus(false, SignInStatus.UNKNOWN_ERROR)
         }
     }

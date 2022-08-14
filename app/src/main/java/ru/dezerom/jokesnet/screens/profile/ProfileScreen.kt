@@ -1,6 +1,5 @@
 package ru.dezerom.jokesnet.screens.profile
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -9,12 +8,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import ru.dezerom.jokesnet.R
 import ru.dezerom.jokesnet.screens.FirstLevelDestinations
+import ru.dezerom.jokesnet.screens.widgets.DoNotKnowWTFTheErrorIs
 import ru.dezerom.jokesnet.screens.widgets.FullWidthButton
 import ru.dezerom.jokesnet.screens.widgets.Loading as LoadingWidget
 
@@ -41,30 +40,16 @@ fun ProfileScreen(
 }
 
 @Composable
-fun Error(
+private fun Error(
     navController: NavController,
     viewModel: ProfileViewModel
 ) {
-    val navToLogin = ProfileScreenEvent.NavigateOut {
+    val navToLogin = ProfileScreenEvent.NavigatedOut {
         navController.navigate(FirstLevelDestinations.LOGIN.route())
     }
-    Image(
-        painter = painterResource(id = R.drawable.ic_baseline_add_task_24),
-        contentDescription = "Check in the circle",
-        modifier = Modifier
-            .fillMaxSize(0.5F)
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-    )
-    Text(
-        text = stringResource(R.string.unknown_error_string),
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-    )
-    Text(
-        text = stringResource(R.string.unknow_error_advise),
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-    )
+    DoNotKnowWTFTheErrorIs()
     FullWidthButton(
-        onClick = { viewModel.obtainEvent(ProfileScreenEvent.TryAgain) },
+        onClick = { viewModel.obtainEvent(ProfileScreenEvent.TriedAgain) },
         text = stringResource(id = R.string.try_again_string)
     )
     FullWidthButton(
@@ -74,7 +59,10 @@ fun Error(
 }
 
 @Composable
-fun ShowingProfileScreen(state: ProfileScreenState.ShowingProfile) {
+private fun ShowingProfileScreen(state: ProfileScreenState.ShowingProfile) {
+    ProfileInfoRow(
+        headerText = stringResource(id = R.string.email_string) + ":",
+        infoString = state.profileInfo.email)
     ProfileInfoRow(
         headerText = stringResource(id = R.string.login_string) + ":",
         infoString = state.profileInfo.login
@@ -86,7 +74,7 @@ fun ShowingProfileScreen(state: ProfileScreenState.ShowingProfile) {
 }
 
 @Composable
-fun ProfileInfoRow(headerText: String, infoString: String) {
+private fun ProfileInfoRow(headerText: String, infoString: String) {
     Row(
         verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.Start,
@@ -98,7 +86,7 @@ fun ProfileInfoRow(headerText: String, infoString: String) {
 }
 
 @Composable
-fun Header(text: String) {
+private fun Header(text: String) {
     Text(
         text = text,
         Modifier
@@ -108,7 +96,7 @@ fun Header(text: String) {
 }
 
 @Composable
-fun Info(text: String) {
+private fun Info(text: String) {
     Text(
         text = text,
         Modifier.padding(top = 16.dp, bottom = 16.dp, start = 8.dp, end = 16.dp)
@@ -116,7 +104,7 @@ fun Info(text: String) {
 }
 
 @Composable
-fun Loading(viewModel: ProfileViewModel) {
+private fun Loading(viewModel: ProfileViewModel) {
     LaunchedEffect(key1 = Unit) {
         val event = ProfileScreenEvent.ProfileInfoQueried
         viewModel.obtainEvent(event)

@@ -13,14 +13,14 @@ sealed class ProfileScreenEvent: Event {
     /**
      * Event of navigating out of [ProfileScreen]
      */
-    class NavigateOut(private val navEvent: () -> Unit): ProfileScreenEvent() {
+    class NavigatedOut(private val navEvent: () -> Unit): ProfileScreenEvent() {
         override fun obtainEvent() = navEvent.invoke()
     }
 
     /**
      * Event of trying again if error occurs
      */
-    object TryAgain: ProfileScreenEvent() {
+    object TriedAgain: ProfileScreenEvent() {
         override fun obtainEvent() {}
     }
 }
