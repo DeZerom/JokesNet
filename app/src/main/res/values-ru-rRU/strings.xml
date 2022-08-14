@@ -7,7 +7,7 @@
     <string name="log_in_string">Войти</string>
     <string name="try_again_string">Попробовать снова</string>
     <string name="loading_joke">Вам бы все хиханьки да хахньки, а мне до базы данных и обратно сходить надо и принести твои шуточки</string>
-    <string name="wrong_credentials_string">Неверный логин или пароль, дружок</string>
+    <string name="wrong_credentials_string">Неверный емаил или пароль, дружок</string>
     <string name="sign_in_string">Зарегистрироваться</string>
     <string name="cancel_string">Отмена</string>
     <string name="successfull_signingIn_string">Nice! Теперь ты смешарик</string>

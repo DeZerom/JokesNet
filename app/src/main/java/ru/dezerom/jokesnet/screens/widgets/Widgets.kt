@@ -1,7 +1,9 @@
 package ru.dezerom.jokesnet.screens.widgets
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
@@ -39,7 +41,8 @@ fun FullWidthTextField(
     onValueChange: (String) -> Unit,
     labelText: String,
     modifier: Modifier = Modifier,
-    visualTransformation: VisualTransformation = VisualTransformation.None
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
     TextField(
         value = value,
@@ -48,7 +51,8 @@ fun FullWidthTextField(
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .fillMaxWidth(),
         label = { Text(text = labelText) },
-        visualTransformation = visualTransformation
+        visualTransformation = visualTransformation,
+        keyboardOptions = keyboardOptions
     )
 }
 
@@ -75,9 +79,13 @@ fun Loading() {
 }
 
 @Composable
-fun Error(text: String, advice: String) {
+fun Error(
+    text: String,
+    advice: String,
+    @DrawableRes drawableRes: Int = R.drawable.ic_baseline_back_hand_24
+) {
     Image(
-        painter = painterResource(R.drawable.ic_baseline_back_hand_24),
+        painter = painterResource(drawableRes),
         contentDescription = "Hand",
         modifier = Modifier
             .fillMaxSize(0.5F)
@@ -91,6 +99,7 @@ fun Error(text: String, advice: String) {
 fun DoNotKnowWTFTheErrorIs() {
     Error(
         text = stringResource(id = R.string.unknown_error_string),
-        advice = stringResource(id = R.string.unknow_error_advise)
+        advice = stringResource(id = R.string.unknow_error_advise),
+        drawableRes = R.drawable.ic_baseline_add_task_24
     )
 }

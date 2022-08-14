@@ -1,7 +1,7 @@
 package ru.dezerom.jokesnet.screens.auth.login
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -10,8 +10,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -64,18 +64,20 @@ private fun CredentialInput(
     state: LoginScreenState.WaitingCredentials,
     navController: NavController
 ) {
-    //login text field
+    //email text field
     FullWidthTextField(
         value = state.email,
         onValueChange = { viewModel.obtainEvent(LoginScreenEvent.EmailChanged(it)) },
-        labelText = stringResource(id = R.string.email_string)
+        labelText = stringResource(id = R.string.email_string),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
     )
     //password text field
     FullWidthTextField(
         value = state.pass,
         onValueChange = { viewModel.obtainEvent(LoginScreenEvent.PasswordChanged(it)) },
         labelText = stringResource(id = R.string.password_string),
-        visualTransformation = PasswordVisualTransformation()
+        visualTransformation = PasswordVisualTransformation(),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
     )
     FullWidthButton(
         onClick = { viewModel.obtainEvent(LoginScreenEvent.LoginBtnClicked(state)) },

@@ -10,6 +10,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import ru.dezerom.jokesnet.net.FirestoreNames
 import javax.inject.Qualifier
 
 @Module
@@ -29,13 +30,13 @@ object FirebaseModule {
     @Provides
     @UsersReference
     fun provideUsersRef(db: FirebaseFirestore): CollectionReference {
-        return db.collection("users")
+        return db.collection(FirestoreNames.USERS_COLLECTION)
     }
 
     @Provides
     @JokesReference
     fun provideJokesRef(db: FirebaseFirestore): CollectionReference {
-        return db.collection("jokes")
+        return db.collection(FirestoreNames.JOKES_COLLECTION)
     }
 
 }

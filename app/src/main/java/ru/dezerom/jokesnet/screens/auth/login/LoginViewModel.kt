@@ -1,5 +1,6 @@
 package ru.dezerom.jokesnet.screens.auth.login
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -57,6 +58,7 @@ class LoginViewModel @Inject constructor(
         _uiState.value = LoginScreenState.CheckingCredentials
         viewModelScope.launch {
             val res = authRepo.performLogin(credentials.email, credentials.pass)
+            Log.e("LoginViewModel", "${res.isSuccessful} ${res.reason}")
             val state = if (res.isSuccessful) {
                 LoginScreenState.Success
             } else {
@@ -68,6 +70,7 @@ class LoginViewModel @Inject constructor(
                     }
                 }
             }
+            Log.e("LoginViewModel", "$state")
             _uiState.postValue(state)
         }
     }
