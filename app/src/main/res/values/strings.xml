@@ -27,4 +27,7 @@
     <string name="wrong_email_string">Wrong email, dude</string>
     <string name="weak_password_string">Your password smells like a weakness.</string>
     <string name="email_string" translatable="false">Email</string>
+    <string name="ok_string">OK</string>
+    <string name="login_changing_title">Enter new login</string>
+    <string name="new_login_string">New login</string>
 </resources>

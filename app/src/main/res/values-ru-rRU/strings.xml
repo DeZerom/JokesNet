@@ -27,4 +27,7 @@
     <string name="and_string">И</string>
     <string name="wrong_email_string">Неверный емаил, чел</string>
     <string name="weak_password_string">Твой пароль пахнет слабостью.</string>
+    <string name="ok_string">Ок</string>
+    <string name="login_changing_title">Введи новый логин</string>
+    <string name="new_login_string">Новый логин</string>
 </resources>

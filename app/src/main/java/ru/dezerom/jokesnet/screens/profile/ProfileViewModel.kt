@@ -25,6 +25,35 @@ class ProfileViewModel @Inject constructor(
             ProfileScreenEvent.ProfileInfoQueried -> getProfileInfo()
             is ProfileScreenEvent.NavigatedOut -> navigateSomewhere(event)
             ProfileScreenEvent.TriedAgain -> tryAgainBtnClicked()
+            is ProfileScreenEvent.LoginChangeRequestAccepted -> obtainLoginChangingRequestAccepted(event)
+            is ProfileScreenEvent.LoginChangeRequestCancelled -> obtainLoginChangeRequestCancelled(event)
+            is ProfileScreenEvent.LoginChangeRequested -> obtainLoginChangeRequested(event)
+            is ProfileScreenEvent.LoginChanged -> obtainLoginChanged(event)
+        }
+    }
+
+    private fun obtainLoginChanged(event: ProfileScreenEvent.LoginChanged) {
+        _uiState.value = event.info
+    }
+
+    private fun obtainLoginChangeRequested(event: ProfileScreenEvent.LoginChangeRequested) {
+        _uiState.value = ProfileScreenState.EditingLogin(event.info.profileInfo.login,
+            event.info.profileInfo)
+    }
+
+    private fun obtainLoginChangeRequestCancelled(
+        event: ProfileScreenEvent.LoginChangeRequestCancelled
+    ) {
+        _uiState.value = ProfileScreenState.ShowingProfile(event.info.profileInfo)
+    }
+
+    private fun obtainLoginChangingRequestAccepted(
+        event: ProfileScreenEvent.LoginChangeRequestAccepted
+    ) {
+        _uiState.value = ProfileScreenState.Loading
+        viewModelScope.launch {
+            val res = profileRepository.updateUserLogin(event.info.newLogin)
+            if (res) getProfileInfo() else _uiState.postValue(ProfileScreenState.Error)
         }
     }
 
