@@ -30,4 +30,9 @@
     <string name="ok_string">OK</string>
     <string name="login_changing_title">Enter new login</string>
     <string name="new_login_string">New login</string>
+    <string name="jokes_string">Jokes</string>
+    <string name="no_joke_provided_yet_string">Click on one of the buttons to see a joke</string>
+    <string name="random_joke_string">Random joke</string>
+    <string name="something_new_string">Something new</string>
+    <string name="joke_hasnt_been_downloaded_string">Joke has not been downloaded. Cry</string>
 </resources>

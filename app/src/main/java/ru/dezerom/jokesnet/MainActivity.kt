@@ -22,6 +22,7 @@ import ru.dezerom.jokesnet.screens.NestedDestinations
 import ru.dezerom.jokesnet.screens.auth.login.Login
 import ru.dezerom.jokesnet.screens.auth.registration.RegistrationScreen
 import ru.dezerom.jokesnet.screens.joke_add.AddJokeScreen
+import ru.dezerom.jokesnet.screens.joke_view.JokesScreen
 import ru.dezerom.jokesnet.screens.profile.ProfileScreen
 import ru.dezerom.jokesnet.ui.theme.JokesNetTheme
 import ru.dezerom.jokesnet.ui.theme.Teal200
@@ -50,7 +51,8 @@ class MainActivity : ComponentActivity() {
                     BackHandler(true) {
                         val route = currentDestination?.destination?.route
                         if (route != FirstLevelDestinations.LOGIN.route() &&
-                            route != FirstLevelDestinations.REGISTRATION.route()) {
+                            route != FirstLevelDestinations.REGISTRATION.route())
+                        {
                             finishAffinity()
                             exitProcess(0)
                         }
@@ -81,6 +83,9 @@ class MainActivity : ComponentActivity() {
                             composable(NestedDestinations.ADD_JOKE.route) {
                                 AddJokeScreen(viewModel = hiltViewModel())
                             }
+                            composable(NestedDestinations.SEE_JOKE.route) {
+                                JokesScreen(viewModel = hiltViewModel())
+                            }
                         }
                     }
                 }
@@ -91,7 +96,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
-    val items = listOf(NestedDestinations.PROFILE, NestedDestinations.ADD_JOKE)
+    val items = listOf(NestedDestinations.PROFILE, NestedDestinations.ADD_JOKE,
+        NestedDestinations.SEE_JOKE)
 
     BottomNavigation(
         backgroundColor = Teal200,

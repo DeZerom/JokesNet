@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import ru.dezerom.jokesnet.R
 
@@ -58,11 +59,13 @@ fun FullWidthTextField(
 
 @Composable
 fun TextWithPadding(
-    text: String
+    text: String,
+    fontSize: TextUnit = TextUnit.Unspecified
 ) {
     Text(
         text = text,
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+        fontSize = fontSize
     )
 }
 

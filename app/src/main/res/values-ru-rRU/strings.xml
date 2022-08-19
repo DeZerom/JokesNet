@@ -30,4 +30,9 @@
     <string name="ok_string">Ок</string>
     <string name="login_changing_title">Введи новый логин</string>
     <string name="new_login_string">Новый логин</string>
+    <string name="jokes_string">Шутки</string>
+    <string name="no_joke_provided_yet_string">Нажми на одну из кнопок, чтобы увидеть шутейку</string>
+    <string name="random_joke_string">Рандомная шутка</string>
+    <string name="something_new_string">Чё-то новенькое</string>
+    <string name="joke_hasnt_been_downloaded_string">Шутка не загружена. Плачь</string>
 </resources>

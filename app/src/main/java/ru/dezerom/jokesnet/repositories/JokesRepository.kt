@@ -6,11 +6,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FieldValue
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import ru.dezerom.jokesnet.di.JokesReference
 import ru.dezerom.jokesnet.di.UsersReference
 import ru.dezerom.jokesnet.net.FirestoreNames
 import ru.dezerom.jokesnet.net.joke.NetJoke
+import ru.dezerom.jokesnet.screens.joke_view.Joke
 import ru.dezerom.jokesnet.utils.SharedPrefsNames
 import javax.inject.Inject
 
@@ -87,6 +89,30 @@ class JokesRepository @Inject constructor(
             @Suppress("ControlFlowWithEmptyBody")
             while (res == null && successful) {}
             res
+        }
+    }
+
+    /**
+     * @return A [Joke] that user hasn't seen yet
+     */
+    suspend fun getNewJoke(): Joke? { //TODO placeholder
+        return withContext(Dispatchers.IO) {
+            delay(1500)
+            Joke(
+                text = "хи хи хаха",
+                creator = "System",
+                views = 666
+            )
+        }
+    }
+
+    /**
+     * @return a random [Joke]
+     */
+    suspend fun getRandomJoke(): Joke? { //TODO placeholder
+        return withContext(Dispatchers.IO) {
+            delay(1500)
+            null
         }
     }
 
