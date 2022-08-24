@@ -1,9 +1,11 @@
 package ru.dezerom.jokesnet.repositories
 
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.core.content.edit
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -14,6 +16,9 @@ import ru.dezerom.jokesnet.net.FirestoreNames
 import ru.dezerom.jokesnet.net.joke.NetJoke
 import ru.dezerom.jokesnet.screens.joke_view.Joke
 import ru.dezerom.jokesnet.utils.SharedPrefsNames
+import ru.dezerom.jokesnet.utils.addResultListeners
+import ru.dezerom.jokesnet.utils.addSuccessListeners
+import java.util.HashMap
 import javax.inject.Inject
 
 class JokesRepository @Inject constructor(
@@ -28,68 +33,57 @@ class JokesRepository @Inject constructor(
      * @return true if joke was added successfully, false otherwise
      */
     suspend fun addJoke(text: String): Boolean {
-        if (text.isBlank()) return false
+        if (text.isBlank()) {
+            return false
+        }
         val creator = authService.currentUser?.email ?: return false
 
-        var resAdding: Boolean? = null
-        jokesRef.add(NetJoke(text, creator))
-            .addOnSuccessListener {
-                resAdding = true
-            }.addOnFailureListener {
-                resAdding = false
-            }
+        val docRef = jokesRef.add(NetJoke(text = text, creator = creator))
+            .addResultListeners() ?: return false
+        Log.e("JokesRepo", docRef.id)
+        if (!createViewsDocument(docRef, creator)) {
+            docRef.delete()
+            return false
+        } else {
+            Log.e("JokesRepo", "created")
+        }
         incrementJokesAddedAmount()
 
-        @Suppress("ControlFlowWithEmptyBody")
-        return withContext(Dispatchers.IO) {
-            while (resAdding == null) {}
-            resAdding ?: false
-        }
+        Log.e("JokesRepo", "returned")
+        return true
     }
 
-    private suspend fun incrementJokesAddedAmount(): Boolean {
-        val docId = sharedPrefs.getString(SharedPrefsNames.PROFILE_ID, null)
-            ?: getUserProfileId() ?: return false
+    private suspend fun createViewsDocument(
+        forWhat: DocumentReference,
+        creatorEmail: String
+    ): Boolean {
+        return forWhat.collection(FirestoreNames.JOKE_VIEWS_COLLECTION)
+            .document(FirestoreNames.JOKE_VIEWS_DOCUMENT)
+            .set(hashMapOf(FirestoreNames.JOKE_VIEWERS_FIELD to listOf(creatorEmail)))
+            .addSuccessListeners()
+    }
 
-        var res: Boolean? = null
+    private suspend fun incrementJokesAddedAmount() {
+        val docId = sharedPrefs.getString(SharedPrefsNames.PROFILE_ID, null)
+            ?: getUserProfileId() ?: return
+
         profileRef.document(docId)
             .update(FirestoreNames.USER_JOKES_ADDED_FIELD, FieldValue.increment(1))
-            .addOnSuccessListener { res = true }
-            .addOnFailureListener { res = false }
-
-        return withContext(Dispatchers.IO) {
-            @Suppress("ControlFlowWithEmptyBody")
-            while (res == null) {}
-            res ?: false
-        }
     }
 
     private suspend fun getUserProfileId(): String? {
         val email = authService.currentUser?.email ?: return null
 
-        var res: String? = null
-        var successful = true
-        profileRef.whereEqualTo(FirestoreNames.USER_EMAIL_FIELD, email).get()
-            .addOnSuccessListener {
-                if (it.documents.isEmpty()) {
-                    successful = false
-                    return@addOnSuccessListener
-                }
-                res = it.documents.first().id
-                sharedPrefs.edit {
-                    putString(SharedPrefsNames.PROFILE_ID, res)
-                    apply()
-                }
-            }
-            .addOnFailureListener {
-                successful = false
-            }
+        val snapshot = profileRef.whereEqualTo(FirestoreNames.USER_EMAIL_FIELD, email).get()
+            .addResultListeners()
 
-        return withContext(Dispatchers.IO) {
-            @Suppress("ControlFlowWithEmptyBody")
-            while (res == null && successful) {}
-            res
+        val id = snapshot?.documents?.firstOrNull()?.id ?: return null
+        sharedPrefs.edit {
+            putString(SharedPrefsNames.PROFILE_ID, id)
+            apply()
         }
+
+        return id
     }
 
     /**

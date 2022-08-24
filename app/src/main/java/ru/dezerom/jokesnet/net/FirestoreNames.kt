@@ -7,5 +7,8 @@ class FirestoreNames {
         const val USER_JOKES_ADDED_FIELD = "jokesAdded"
         const val USERS_COLLECTION = "users"
         const val JOKES_COLLECTION = "jokes"
+        const val JOKE_VIEWS_COLLECTION = "views_coll"
+        const val JOKE_VIEWS_DOCUMENT = "views_doc"
+        const val JOKE_VIEWERS_FIELD = "viewers"
     }
 }
