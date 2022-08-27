@@ -40,16 +40,12 @@ class JokesRepository @Inject constructor(
 
         val docRef = jokesRef.add(NetJoke(text = text, creator = creator))
             .addResultListeners() ?: return false
-        Log.e("JokesRepo", docRef.id)
         if (!createViewsDocument(docRef, creator)) {
             docRef.delete()
             return false
-        } else {
-            Log.e("JokesRepo", "created")
         }
         incrementJokesAddedAmount()
 
-        Log.e("JokesRepo", "returned")
         return true
     }
 
@@ -89,16 +85,11 @@ class JokesRepository @Inject constructor(
     /**
      * @return A [Joke] that user hasn't seen yet
      */
-    suspend fun getNewJoke(): Joke? { //TODO placeholder
-        return withContext(Dispatchers.IO) {
-            delay(1500)
-            Joke(
-                text = "хи хи хаха",
-                creator = "System",
-                views = 666
-            )
-        }
+    suspend fun getNewJoke(): Joke? {
+
     }
+
+    private suspend fun get
 
     /**
      * @return a random [Joke]
